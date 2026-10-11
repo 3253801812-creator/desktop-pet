@@ -1,0 +1,222 @@
+/* ===========================================================================
+ * 桌宠窗口样式（透明背景；只有宠物/菜单是实心区域）
+ * =========================================================================== */
+:root { --pet-size: 150px; }
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; height: 100%; width: 100%;
+  background: transparent; overflow: hidden;
+  user-select: none; -webkit-user-select: none;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  cursor: default;
+}
+.stage { position: absolute; inset: 0; }
+
+/* ---------------- 宠物本体 ---------------- */
+.pet {
+  position: absolute;
+  width: var(--pet-size);
+  height: var(--pet-size);
+}
+.pet.br { right: 6px; bottom: 6px; }
+.pet.bl { left: 6px; bottom: 6px; }
+.pet.tr { right: 6px; top: 6px; }
+.pet.tl { left: 6px; top: 6px; }
+
+.pet-img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  cursor: grab;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 6px 12px rgba(5, 10, 40, .38));
+  transform-origin: 50% 100%;
+  transition: transform .22s cubic-bezier(.34,1.56,.64,1);
+}
+/* 吸附到左侧时镜像翻转，让它朝向屏幕内侧 */
+.pet.bl .pet-img, .pet.tl .pet-img { transform: scaleX(-1); }
+/* 按压时 Q 弹 */
+.pet.press .pet-img { transform: scaleY(.9) scaleX(1.06); }
+.pet.bl.press .pet-img, .pet.tl.press .pet-img { transform: scaleX(-1) scaleY(.9); }
+.pet.dragging .pet-img { cursor: grabbing; }
+
+/* 提醒抖动 */
+.pet.shake { animation: pet-shake .55s ease; }
+@keyframes pet-shake {
+  0%, 100% { transform: translateX(0); }
+  16% { transform: translateX(-5px); }
+  34% { transform: translateX(5px); }
+  52% { transform: translateX(-3px); }
+  70% { transform: translateX(3px); }
+  88% { transform: translateX(-1px); }
+}
+
+/* 连续点击 10 下换形态时的"啵"一下 */
+.pet.pop { animation: pet-pop .62s cubic-bezier(.34,1.56,.64,1); }
+@keyframes pet-pop {
+  0% { transform: scale(1) rotate(0deg); }
+  35% { transform: scale(1.16) rotate(-3deg); }
+  62% { transform: scale(.96) rotate(2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* 无安排时"说话"：小跳一下，配合飘出来的气泡 */
+.pet.hop { animation: pet-hop .6s cubic-bezier(.34,1.56,.64,1); }
+@keyframes pet-hop {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-9px) scale(1.04, .96); }
+  58% { transform: translateY(0) scale(.97, 1.03); }
+  78% { transform: translateY(-3px) scale(1.01); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* ---------------- 气泡（便签） ---------------- */
+.bubble {
+  position: absolute;
+  width: max-content;
+  max-width: 230px;
+  max-height: 46vh;            /* 大尺寸立绘 + 长提醒文案也不会被窗口顶部裁掉 */
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #fffdf3;
+  box-shadow: 0 5px 18px rgba(10, 20, 60, .38);
+  color: #203170;
+  font-size: 12.5px;
+  line-height: 1.35;
+  text-align: left;
+  text-shadow: none;
+  opacity: 0;
+  transform: translateY(5px) scale(.95);
+  transform-origin: 100% 100%;
+  transition: opacity .18s ease, transform .24s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  z-index: 3;
+}
+.bubble.on { opacity: 1; transform: translateY(0) scale(1); }
+.bubble.alert { background: #fff1f1; color: #b02a2a; box-shadow: 0 5px 20px rgba(190, 40, 40, .45); }
+.bubble.pop { background: #fff8e2; color: #9a5c07; box-shadow: 0 5px 22px rgba(230, 160, 30, .5); }
+
+/* 气泡朝向：宠物在右 → 气泡挂左上方；宠物在左 → 挂右上方；宠物在上 → 挂下方 */
+.pet.br .bubble, .pet.tr .bubble { right: 0; bottom: calc(100% - 14px); }
+.pet.bl .bubble, .pet.tl .bubble { left: 0; bottom: calc(100% - 14px); }
+.pet.tr .bubble, .pet.tl .bubble { bottom: auto; top: calc(100% - 14px); }
+
+.bubble::after {
+  content: ''; position: absolute;
+  width: 10px; height: 10px;
+  background: inherit;
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+.pet.br .bubble::after { right: 16px; bottom: -4px; }
+.pet.bl .bubble::after { left: 16px; bottom: -4px; }
+.pet.tr .bubble::after { right: 16px; top: -4px; }
+.pet.tl .bubble::after { left: 16px; top: -4px; }
+
+.b-title { font-size: 10px; opacity: .6; letter-spacing: .05em; margin-bottom: 2px; }
+.b-main { font-size: 13.5px; font-weight: 700; line-height: 1.25; word-break: break-word; }
+.b-hint { font-size: 10.5px; opacity: .7; margin-top: 4px; }
+
+/* 形象切换：两段式按钮 */
+.m-seg { display: flex; gap: 6px; flex: 1; }
+.m-seg-btn {
+  flex: 1; font: inherit; font-size: 12px; padding: 4px 6px; cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, .18); border-radius: 8px; background: #fff; color: #555;
+}
+.m-seg-btn.on { background: #ffe9a8; border-color: #dcae48; color: #7a4a00; font-weight: 700; }
+.m-seg-btn:active { transform: translateY(1px); }
+
+/* 提醒气泡上的按钮：只有提醒中才出现，并且那段时间气泡区域才接收鼠标 */
+.b-actions { display: none; gap: 6px; margin-top: 7px; }
+.bubble.act { pointer-events: auto; }
+.bubble.act .b-actions { display: flex; }
+.b-act {
+  flex: 1; font: inherit; font-size: 11.5px; padding: 5px 6px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, .14); background: #fff; color: #333; white-space: nowrap;
+}
+.b-act.primary { background: #ffe9a8; border-color: #dcae48; font-weight: 700; }
+.b-act:active { transform: translateY(1px); }
+.b-tip { display: none; font-size: 10px; opacity: .55; margin-top: 5px; line-height: 1.3; }
+.bubble.act .b-tip { display: block; }
+.b-row { display: flex; align-items: baseline; gap: 7px; padding: 1.5px 0; }
+.b-row .b-t { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 36px; }
+.b-row.past { opacity: .4; text-decoration: line-through; }
+.b-row.now { color: #b3521f; }
+
+/* ---------------- 右键菜单 ----------------
+ * 两列排布：内容变多后单列会高出桌宠窗口（曾被截掉顶部的「形象」按钮），
+ * 现在固定两列 + 最高不超过窗口高度，保证任何一项都不会跑到窗口外面。 */
+.menu {
+  position: absolute;
+  width: 520px;
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  color: #1b2338;
+  font-size: 12.5px;
+  box-shadow: 0 14px 38px rgba(6, 12, 40, .45);
+  border: 1px solid rgba(180, 195, 235, .7);
+  display: none;
+  z-index: 6;
+}
+.menu.show { display: block; }
+.menu h4 { margin: 0 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .08em; color: #203170; }
+.m-cols { display: flex; gap: 14px; align-items: flex-start; }
+.m-col { display: flex; flex-direction: column; flex: 0 0 240px; min-width: 0; }
+.m-row { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
+.m-row label { flex: 0 0 48px; opacity: .75; }
+.m-row input[type=range] { flex: 1; min-width: 0; accent-color: #4b6bd6; }
+.m-row select { flex: 1; min-width: 0; padding: 3px 4px; border-radius: 6px; border: 1px solid #c9d2e8; background: #fff; color: #1b2338; font-size: 12px; }
+.m-row input[type=text] {
+  flex: 1; min-width: 0; padding: 3px 6px; border-radius: 6px;
+  border: 1px solid #c9d2e8; background: #fff; color: #1b2338;
+  font-size: 12px; font-family: inherit;
+}
+.m-row input[type=text]::placeholder { color: #9aa6c6; }
+.m-val { flex: 0 0 36px; text-align: right; font-variant-numeric: tabular-nums; opacity: .7; }
+.m-chk { display: flex; align-items: center; gap: 6px; margin: 5px 0; cursor: pointer; }
+.m-chk input { accent-color: #4b6bd6; }
+.m-sep { height: 1px; background: #e6eaf5; margin: 10px 0; }
+.m-btn {
+  width: 100%; padding: 7px 0; margin-bottom: 6px;
+  border-radius: 8px; border: 1px solid #c9d2e8; background: #f6f8ff;
+  color: #203170; font-size: 12.5px; cursor: pointer; font-family: inherit;
+}
+.m-btn:hover { background: #eaf0ff; }
+.m-btn.primary { background: #4b6bd6; border-color: #4b6bd6; color: #fff; }
+.m-btn.primary:hover { background: #3f5cc0; }
+.m-tip { margin-top: 6px; font-size: 10.5px; line-height: 1.5; opacity: .55; }
+
+/* 闹钟：分钟数输入 + 设/取消小按钮 + 剩余时间提示 */
+.m-row input[type=number] {
+  flex: 0 0 52px; min-width: 0; padding: 3px 4px; border-radius: 6px;
+  border: 1px solid #c9d2e8; background: #fff; color: #1b2338;
+  font-size: 12px; font-family: inherit; font-variant-numeric: tabular-nums;
+}
+.m-row input[type=number]::-webkit-inner-spin-button { opacity: .45; }
+.m-mini {
+  flex: 0 0 auto; padding: 3px 8px; border-radius: 6px;
+  border: 1px solid #c9d2e8; background: #eef2ff; color: #203170;
+  font-size: 11.5px; cursor: pointer; font-family: inherit;
+}
+.m-mini:hover { background: #e0e8ff; }
+.m-tip.on { opacity: .85; color: #2a4bb8; font-weight: 600; }
+/* 提醒 / 闹钟：整行卡片 ------------------------------------------------
+ * 这些控件合起来需要 ~400px，塞进 240px 的半列必然换行（标签被压成两行、
+ * 「分钟后」和「取消」被顶到下一行）。现在给它整行 496px，并按宽度固定分配。 */
+.m-group {
+  border: 1px solid #e6eaf5; border-radius: 10px; background: #fbfcff;
+  padding: 7px 10px 3px; margin: 0 0 10px;
+}
+.m-ghead { font-size: 10px; letter-spacing: .12em; opacity: .5; margin-bottom: 2px; }
+.m-row.wide { flex-wrap: nowrap; gap: 7px; margin: 7px 0; }
+.m-row.wide label { flex: 0 0 72px; white-space: nowrap; }
+.m-row.wide select { flex: 0 0 112px; }
+.m-row.wide input[type=number] { flex: 0 0 58px; }
+.m-row.wide input[type=text] { flex: 1 1 auto; }
+.m-unit { flex: 0 0 auto; font-size: 11.5px; opacity: .7; white-space: nowrap; }
+.m-btn.inline { width: auto; margin-bottom: 0; padding: 6px 14px; white-space: nowrap; }
+.m-tip.inline { margin: 0 0 0 auto; white-space: nowrap; opacity: .6; }

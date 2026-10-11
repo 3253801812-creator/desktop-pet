@@ -1,0 +1,141 @@
+/* ===========================================================================
+ * 设置窗口样式
+ * 布局约定：
+ *   · 页面 = 顶栏 + 卡片区（两列自适应）+ 时段任务卡（整行）+ 页脚
+ *   · 每张卡里的「设置行」用同一套三列栅格：标签 84px / 控件 1fr / 数值 64px
+ *   · 主要按钮/输入框最小 30px 高，行内小按钮与勾选框 26px（WCAG 2.2 底线 24px 之上），所有字号只有 5 档（19 / 13.5 / 13 / 12 / 11.5）
+ * =========================================================================== */
+:root {
+  --line: #e2e8f7;
+  --line-2: #ccd5ea;
+  --ink: #1b2338;
+  --ink-2: #46527a;
+  --brand: #4b6bd6;
+  --brand-2: #3f5cc0;
+  --brand-ink: #203170;
+  --bg: #f6f8ff;
+  --card: #fff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 18px 22px 22px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-user-select: none; user-select: none;
+}
+
+/* ---------------- 顶栏 ---------------- */
+header { margin-bottom: 14px; }
+header h1 { margin: 0 0 3px; font-size: 19px; color: var(--brand-ink); }
+.sub { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+
+/* ---------------- 卡片 ---------------- */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; align-items: start; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px 16px;
+  box-shadow: 0 2px 10px rgba(20, 35, 90, .05);
+}
+.card.tasks { margin-top: 14px; }
+input, select, textarea, footer { -webkit-user-select: text; user-select: text; }
+
+.card h2 {
+  margin: 0 0 12px; padding-left: 9px; font-size: 13.5px; color: var(--brand-ink);
+  border-left: 3px solid var(--brand); line-height: 1.2;
+}
+.count { margin-left: 6px; font-size: 11.5px; color: var(--ink-2); font-weight: 400; }
+.note { margin: 10px 0 0; font-size: 12px; color: var(--ink-2); line-height: 1.6; }
+.note b { color: var(--brand-ink); }
+
+/* ---------------- 设置行：统一三列栅格 ---------------- */
+.rows { display: grid; gap: 8px; }
+.row { display: grid; grid-template-columns: 84px minmax(0, 1fr) 64px; align-items: center; gap: 10px; min-height: 32px; }
+.row label { color: var(--ink-2); }
+.row input[type=range] { width: 100%; min-width: 0; height: 20px; accent-color: var(--brand); }
+.row select {
+  grid-column: 2 / 4;                       /* 下拉框直接占满控件列 + 数值列 */
+  width: 100%; min-width: 0; height: 30px; padding: 0 6px;
+  border: 1px solid var(--line-2); border-radius: 7px; background: #fff;
+  color: var(--ink); font-size: 13px; font-family: inherit;
+}
+.val { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-2); font-size: 12.5px; }
+
+/* ---------------- 开关：两列 ---------------- */
+.chks { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 4px 14px; margin-top: 12px; }
+.chk { display: flex; align-items: center; gap: 7px; min-height: 26px; cursor: pointer; }
+.chk input { width: 15px; height: 15px; accent-color: var(--brand); cursor: pointer; }
+.chk:hover { color: var(--brand-ink); }
+
+/* ---------------- 按钮区 ---------------- */
+.actions { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.btn {
+  min-height: 32px; padding: 0 15px; border-radius: 8px; border: 1px solid var(--line-2);
+  background: #f6f8ff; color: var(--brand-ink); font-size: 12.5px; cursor: pointer; font-family: inherit;
+}
+.btn:hover { background: #eaf0ff; }
+.btn.link {
+  min-height: 26px; padding: 0 10px; margin-left: 4px;
+  border-color: transparent; background: transparent; color: var(--brand); font-size: 12.5px;
+}
+.btn.link:hover { background: #eef2ff; border-color: var(--line-2); }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn.primary:hover { background: var(--brand-2); }
+button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--brand); outline-offset: 1px;
+}
+.ok { font-size: 12px; color: #237a43; opacity: 0; transition: opacity .2s ease; }
+.ok.show { opacity: 1; }
+
+/* ---------------- 时段任务表 ---------------- */
+.table { margin-top: 12px; }
+.th, .tr {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) 76px 108px 52px 30px;
+  gap: 8px;
+  align-items: center;
+}
+.th {
+  position: sticky; top: 0; z-index: 2;
+  padding: 0 2px 7px; border-bottom: 1px solid var(--line);
+  background: var(--card);
+  font-size: 11.5px; color: var(--ink-2);
+}
+.th .c { text-align: center; }
+.tr { padding: 5px 2px; border-bottom: 1px solid #f1f4fd; }
+.tr:last-child { border-bottom: none; }
+.tr:hover { background: #fafbff; }
+.tr input[type=time], .tr input[type=text], .tr input[type=number], .tr select {
+  width: 100%; min-width: 0; height: 30px; padding: 0 7px;
+  border: 1px solid var(--line-2); border-radius: 7px;
+  background: #fbfcff; color: var(--ink); font-size: 13px; font-family: inherit;
+}
+.tr input[type=number] { font-variant-numeric: tabular-nums; }
+.tr input[type=checkbox] { width: 15px; height: 15px; justify-self: center; accent-color: var(--brand); cursor: pointer; }
+/* 删除：以前是个空按钮（高 2px、看不见）—— 现在给一个看得见的 ✕ 和 26×26 的点击区 */
+.tr .del {
+  justify-self: center; width: 26px; height: 26px; padding: 0;
+  border: 1px solid transparent; border-radius: 7px; background: transparent;
+  color: #b32b2b; font-size: 14px; line-height: 1; cursor: pointer; font-family: inherit;
+}
+.tr .del:hover { background: #fdecec; border-color: #f3c9c9; }
+.empty { padding: 14px 2px; font-size: 12.5px; color: var(--ink-2); }
+
+/* ---------------- 页脚 ---------------- */
+footer {
+  margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line);
+  font-size: 11.5px; color: var(--ink-2); line-height: 1.7; word-break: break-all;
+}
+
+/* 窄窗口：卡片改单列、表头列宽收紧 */
+@media (max-width: 700px) {
+  body { padding: 14px 14px 18px; }
+  .cols { grid-template-columns: 1fr; }
+  .th, .tr { grid-template-columns: 74px minmax(0, 1fr) 66px 92px 44px 28px; gap: 6px; }
+}

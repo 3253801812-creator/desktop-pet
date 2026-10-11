@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; media-src 'self'; style-src 'self' 'unsafe-inline'">
+<title>记事本桌宠</title>
+<link rel="stylesheet" href="pet.css">
+</head>
+<body>
+  <div class="stage" id="stage">
+    <!-- 桌宠本体：所在的角落由 anchor 类决定（br / bl / tr / tl），窗口吸附屏幕边缘 -->
+    <div class="pet br" id="pet">
+      <img class="pet-img hit" id="petImg" src="../assets/pet.png" alt="桌宠" draggable="false">
+      <div class="bubble" id="bubble">
+        <div class="b-title" id="bTitle">接下来</div>
+        <div class="b-main" id="bMain">…</div>
+        <div class="b-hint" id="bHint"></div>
+        <div class="b-actions" id="bActions">
+          <button class="b-act" id="bSnooze">稍后 <span id="bSnoozeMin">5</span> 分钟</button>
+          <button class="b-act primary" id="bDone">完成 ✓</button>
+        </div>
+        <div class="b-tip">双击桌宠也能确认 · 确认前每分钟再提醒一次</div>
+      </div>
+    </div>
+
+    <!-- 右键菜单（画在同一个透明窗口里，位置随宠物所在角落自适应） -->
+    <div class="menu hit" id="menu">
+      <h4>桌宠设置</h4>
+      <!-- 提醒 / 闹钟：这一块控件多，独占整行（塞进半列必然被挤换行） -->
+      <div class="m-group">
+        <div class="m-ghead">提醒 / 闹钟</div>
+        <div class="m-row wide">
+          <label>稍后提醒</label>
+          <select id="mSnoozeMin">
+            <option value="1">1 分钟</option><option value="3">3 分钟</option><option value="5">5 分钟</option>
+            <option value="10">10 分钟</option><option value="15">15 分钟</option><option value="30">30 分钟</option><option value="60">60 分钟</option>
+          </select>
+          <button class="m-btn inline primary" id="mSnoozeNow"><span id="mSnoozeNowMin">5</span> 分钟后提醒我</button>
+        </div>
+        <div class="m-row wide" id="mAlarmRow">
+          <label>自定义闹钟</label>
+          <input type="number" id="mAlarmMin" min="1" max="1440" step="1" value="5">
+          <span class="m-unit">分钟后</span>
+          <button class="m-mini" id="mAlarmSet">设</button>
+          <button class="m-mini" id="mAlarmOff">取消</button>
+          <span class="m-tip inline" id="mAlarmTip">闹钟：还没设</span>
+        </div>
+        <div class="m-row wide">
+          <label>提醒我</label>
+          <input type="text" id="mAlarmText" maxlength="40" placeholder="要提醒的事（可留空）">
+        </div>
+      </div>
+      <div class="m-cols">
+        <!-- 左列：形象与观感 -->
+        <div class="m-col">
+          <div class="m-row"><label>形象</label>
+            <div class="m-seg">
+              <button class="m-seg-btn" id="mCharSkadi">斯卡蒂</button>
+              <button class="m-seg-btn" id="mCharXiaote">小特</button>
+              <button class="m-seg-btn" id="mCharMumu">缪缪</button>
+            </div>
+          </div>
+          <div class="m-row"><label>大小</label><input type="range" id="mScale" min="0.6" max="2" step="0.05"><span class="m-val" id="mScaleVal"></span></div>
+          <div class="m-row"><label>音量</label><input type="range" id="mVol" min="0" max="1" step="0.05"><span class="m-val" id="mVolVal"></span></div>
+          <div class="m-row"><label>音效</label>
+            <select id="mSoundSet"><option value="duck">小黄鸭</option><option value="fx1">音效 1</option></select>
+          </div>
+          <div class="m-row"><label>提醒音</label>
+            <select id="mRemindSound"><option value="orb">经验球</option><option value="a">提示音 A</option><option value="none">静音</option></select>
+          </div>
+          <div class="m-row"><label>气泡</label><input type="range" id="mBubbleSec" min="0" max="20" step="1"><span class="m-val" id="mBubbleSecVal"></span></div>
+          <div class="m-tip">慢点桌宠 1 下：接下来 · 2 下：今天清单 · 3 下：闹钟倒计时 · 4 下：收起。<br>连点（<700ms）则飘台词，连点 10 下换形态。</div>
+        </div>
+        <!-- 右列：开关与操作 -->
+        <div class="m-col">
+          <label class="m-chk"><input type="checkbox" id="mSoundOn"> 音效开关</label>
+          <label class="m-chk"><input type="checkbox" id="mBubbleOn"> 显示气泡</label>
+          <label class="m-chk"><input type="checkbox" id="mSnapOn"> 自动吸附屏幕边缘</label>
+          <label class="m-chk"><input type="checkbox" id="mAlwaysOnTop"> 始终置顶</label>
+          <div class="m-sep"></div>
+          <button class="m-btn primary" id="mTasks">📝 时段任务…</button>
+          <button class="m-btn" id="mHide">👻 隐藏桌宠</button>
+          <button class="m-btn" id="mQuit">✕ 退出</button>
+          <div class="m-tip">托盘图标（右下角）里也有设置；把它拖到屏幕边缘会自动吸附。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="pet.js"></script>
+</body>
+</html>

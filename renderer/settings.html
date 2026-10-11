@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; media-src 'self'; style-src 'self' 'unsafe-inline'">
+<title>记事本桌宠 · 设置与时段任务</title>
+<link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <!-- 顶栏：标题 + 一句话说明 -->
+  <header>
+    <h1>记事本桌宠</h1>
+    <p class="sub">桌宠常驻在桌面上，到点会弹气泡 + 响铃 + 系统通知，提醒你该干什么。</p>
+  </header>
+
+  <main class="cols">
+    <!-- 一、外观与声音 -->
+    <section class="card">
+      <h2>外观与声音</h2>
+      <div class="rows">
+        <div class="row"><label for="scale">大小</label><input type="range" id="scale" min="0.6" max="2" step="0.05"><span class="val" id="scaleVal"></span></div>
+        <div class="row"><label for="vol">音量</label><input type="range" id="vol" min="0" max="1" step="0.05"><span class="val" id="volVal"></span></div>
+        <div class="row"><label for="soundSet">按压音效</label><select id="soundSet"><option value="duck">小黄鸭</option><option value="fx1">音效 1</option></select></div>
+        <div class="row"><label for="remindSound">提醒音</label><select id="remindSound"><option value="orb">经验球</option><option value="a">提示音 A</option><option value="none">静音</option></select></div>
+      </div>
+      <div class="chks">
+        <label class="chk"><input type="checkbox" id="petVisible"> 显示桌宠</label>
+        <label class="chk"><input type="checkbox" id="soundOn"> 音效开关</label>
+        <label class="chk"><input type="checkbox" id="alwaysOnTop"> 始终置顶显示</label>
+        <label class="chk"><input type="checkbox" id="snapOn"> 自动吸附屏幕边缘</label>
+      </div>
+    </section>
+
+    <!-- 二、提醒与气泡 -->
+    <section class="card">
+      <h2>提醒与气泡</h2>
+      <div class="rows">
+        <div class="row"><label for="bubbleSec">气泡停留</label><input type="range" id="bubbleSec" min="0" max="20" step="1"><span class="val" id="bubbleSecVal"></span></div>
+        <div class="row"><label for="snoozeMin">稍后提醒</label><select id="snoozeMin">
+          <option value="1">1 分钟</option><option value="3">3 分钟</option><option value="5">5 分钟</option>
+          <option value="10">10 分钟</option><option value="15">15 分钟</option><option value="30">30 分钟</option><option value="60">60 分钟</option>
+        </select></div>
+      </div>
+      <p class="note">提醒没确认前，每 1 分钟再提醒一次；<b>双击桌宠</b>或点气泡上的「完成 ✓」即确认。</p>
+      <div class="chks">
+        <label class="chk"><input type="checkbox" id="bubbleOn"> 显示气泡</label>
+        <label class="chk"><input type="checkbox" id="notifyOn"> 到点发 Windows 系统通知</label>
+        <label class="chk"><input type="checkbox" id="autoStart"> 开机自动启动</label>
+      </div>
+      <p class="note">「开机自动启动」默认是<b>关闭</b>的：想一开机就有桌宠就勾上，随时可以再取消（托盘菜单里也有同一个开关）。</p>
+      <div class="actions">
+        <button class="btn" id="testRemind">🔔 试一下提醒</button>
+        <span class="ok" id="saveHint"></span>
+      </div>
+    </section>
+  </main>
+
+  <!-- 三、时段任务（整行） -->
+  <section class="card tasks">
+    <h2>时段任务 <span class="count" id="taskCount"></span></h2>
+    <p class="note">「提前」= 提前几分钟开始提醒（例：14:00 的任务、提前 10 分 → 13:50 就提醒）。</p>
+      <p class="note"><b>默认没有日程</b>：点下面的「＋ 新增一条」自己加；想先看看格式，就点「一键加回示例任务」。</p>
+    <div class="table">
+      <div class="th">
+        <span>时间</span><span>要干的事</span><span>提前(分)</span><span>重复</span><span class="c">启用</span><span></span>
+      </div>
+      <div id="list"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="add">＋ 新增一条</button>
+      <button class="btn primary" id="save">保存任务</button>
+      <button class="btn" id="revert">放弃改动</button>
+      <button class="btn" id="restore" hidden>↩ 恢复上次备份</button>
+      <span class="ok" id="taskHint"></span>
+    </div>
+  </section>
+
+  <footer id="foot"></footer>
+  <script src="settings.js"></script>
+</body>
+</html>

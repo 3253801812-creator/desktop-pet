@@ -1,0 +1,36 @@
+# 依赖
+node_modules/
+
+# 打包产物：便携版 exe 有 108MB，超过 GitHub 单文件 100MB 上限 → 一律走 Releases 发布，不入库
+dist/
+/*.exe
+*.blockmap
+builder-debug.yml
+.icon-ico/
+
+# 快捷方式（内含本机绝对路径，对别人没用）
+*.lnk
+
+# 私有开发工具（内含本地路径）
+tools/pluginlines.mjs
+
+# 抠图参数存档（记着本机原图路径）
+assets/立绘来源.json
+
+# 图像分析的一次性输出（tools/art 跑出来的中间图）
+tools/art/out/
+*.cut.png
+*-checker.png
+*-magenta.png
+
+# 日志与临时文件
+*.log
+*.tmp
+*.bak
+
+# 编辑器与系统
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+desktop.ini

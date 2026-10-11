@@ -1,0 +1,16 @@
+# 源码统一 LF；Windows 脚本保持 CRLF（.ps1 还需要 UTF-8 BOM，见 docs/发布流程.md）
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# 二进制：不做换行转换
+*.exe binary
+*.ico binary
+*.png binary
+*.gif binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+
+# 生成物在 GitHub 上折叠显示
+package-lock.json linguist-generated=true

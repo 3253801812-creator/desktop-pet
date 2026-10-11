@@ -1,0 +1,2 @@
+window.petAPI.openSettings()
+'opened'

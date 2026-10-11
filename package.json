@@ -1,0 +1,82 @@
+{
+  "name": "notepad-pet-app",
+  "version": "0.5.14",
+  "private": true,
+  "description": "桌面桌宠：常驻桌面的可拖拽桌宠 + 时段任务到点提醒 + 闹钟倒计时（Electron 独立桌面软件）",
+  "author": "zhuochong",
+  "keywords": [
+    "electron",
+    "desktop-pet",
+    "windows",
+    "reminder",
+    "alarm",
+    "tray"
+  ],
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64",
+    "dist:portable": "electron-builder --win portable --x64",
+    "dist:dir": "electron-builder --win --dir",
+    "check": "node --check main.js && node --check preload.js && node --check renderer/pet.js && node --check renderer/settings.js",
+    "test": "powershell -ExecutionPolicy Bypass -File tests/run-all.ps1",
+    "test:audit": "powershell -ExecutionPolicy Bypass -File tests/verify-audit.ps1",
+    "test:alarm": "powershell -ExecutionPolicy Bypass -File tests/verify-alarm-restart.ps1",
+    "test:smoke": "powershell -ExecutionPolicy Bypass -File tests/smoke-packaged.ps1"
+  },
+  "devDependencies": {
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3",
+    "jpeg-js": "^0.4.4",
+    "pngjs": "^7.0.0"
+  },
+  "build": {
+    "appId": "com.notepadpet.desktop",
+    "productName": "记事本桌宠",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "assets/**/*",
+      "!assets/*.json",
+      "package.json"
+    ],
+    "compression": "maximum",
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "记事本桌宠",
+      "artifactName": "记事本桌宠-安装程序-${version}.exe",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "记事本桌宠-便携版-${version}.exe",
+      "requestExecutionLevel": "user"
+    }
+  },
+  "license": "UNLICENSED"
+}
