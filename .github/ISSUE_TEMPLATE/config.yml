@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 常见问题（先看这里）
+    url: https://github.com/3253801812-creator/desktop-pet#常见问题
+    about: 启动慢、隐形、自启、数据位置等常见疑问
+  - name: 打包与发布流程
+    url: https://github.com/3253801812-creator/desktop-pet/blob/main/docs/发布流程.md
+    about: 想自己打包或发版本看这份

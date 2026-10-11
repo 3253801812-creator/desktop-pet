@@ -1,6 +1,55 @@
 # 桌宠（记事本桌宠）
 
-## 下载与运行
+<p align="center">
+  <a href="https://github.com/3253801812-creator/desktop-pet/releases"><img src="https://img.shields.io/github/v/release/3253801812-creator/desktop-pet?sort=semver&color=2ea44f&label=release" alt="release"></a>
+  <a href="https://github.com/3253801812-creator/desktop-pet/actions"><img src="https://img.shields.io/github/actions/workflow/status/3253801812-creator/desktop-pet/check.yml?label=check" alt="check"></a>
+  <a href="https://github.com/3253801812-creator/desktop-pet/commits/main"><img src="https://img.shields.io/github/last-commit/3253801812-creator/desktop-pet?label=更新" alt="last commit"></a>
+  <img src="https://img.shields.io/badge/platform-Windows%2010%20%2F%2011-0078D6?logo=windows&logoColor=white" alt="platform">
+  <img src="https://img.shields.io/badge/Electron-44-47848F?logo=electron&logoColor=white" alt="electron">
+  <img src="https://img.shields.io/badge/Node-18%2B-339933?logo=nodedotjs&logoColor=white" alt="node">
+  <a href="https://github.com/3253801812-creator/desktop-pet/stargazers"><img src="https://img.shields.io/github/stars/3253801812-creator/desktop-pet?style=social" alt="stars"></a>
+</p>
+
+> **一只常驻 Windows 桌面的小桌宠。** 拖着走、松手吸附屏幕边缘、到点提醒你该干什么，提醒之后每 1 分钟追着你确认。
+> 纯 Electron + 原生 JavaScript 手写，不依赖任何运行时；下载即用的单文件 exe，或者从源码一条命令跑起来。
+
+<p align="center"><img src="docs/preview/settings-window.png" width="78%" alt="设置窗口"></p>
+
+## 目录
+
+- [功能特性](#功能特性) · [界面预览](#界面预览) · [快速开始](#快速开始)
+- [这个文件夹里有什么](#一这个文件夹里有什么) · [桌宠怎么用](#二桌宠怎么用) · [时段任务与提醒](#三时段任务与提醒核心功能)
+- [立绘是怎么来的](#四立绘是怎么来的抠图) · [设置窗口的布局](#五设置窗口的布局) · [数据位置](#六数据位置)
+- [源码结构](#七源码结构) · [实测验收](#八实测验收都是真跑出来的不是应该能用) · [已知限制](#九已知限制)
+- [项目结构](#十一项目结构) · [可以继续加](#十二可以继续加) · [贡献与许可](#贡献与许可)
+
+## 功能特性
+
+| | 功能 | 说明 |
+|---|---|---|
+| 🐾 | **常驻桌面** | 无边框透明窗口，始终在最上层，不占任务栏 |
+| ✋ | **拖拽 + 边缘吸附** | 按住就能拖，松手自动贴到最近的屏幕边缘（60px 以内才吸） |
+| 🖱️ | **鼠标穿透** | 只有桌宠本体和菜单接收点击，**其它透明区域的点击直接落到桌面/其它窗口**，不挡你干活 |
+| ⏰ | **时段任务提醒** | 按「时段 + 内容」安排每天要做的事，到点弹气泡提醒 |
+| 🔁 | **提醒追认** | 提醒之后每 1 分钟追一次，直到你点「完成 / 稍后 / 忽略」 |
+| ⏱️ | **闹钟** | 菜单里设「N 分钟后提醒我」，可附一句提醒内容，**重启后自动恢复** |
+| 🎭 | **三个形象** | 斯卡蒂 / 小特 / 缪缪，连点 10 下桌宠即可切换 |
+| 💬 | **随机台词** | 今天没安排时点一下，按权重随机飘一句（绝不连着重复） |
+| 🪟 | **设置窗口** | 独立窗口调形象、大小、音量、音效、气泡、开机自启等，改动即时保存 |
+| 📌 | **托盘常驻** | 托盘图标右键可显示/隐藏桌宠、开关自启、退出 |
+| 💾 | **数据全在本地** | 全部存在 `%APPDATA%\notepad-pet-app`，**不联网、无遥测、不收集任何信息** |
+| 🚫 | **默认不打扰** | **默认不开机自启、默认日程为空**；空日程会给你一句友好提示 |
+
+## 界面预览
+
+| 右键菜单（提醒 / 闹钟） | 设置窗口 |
+|---|---|
+| ![右键菜单](docs/preview/menu-0.5.14.png) | ![设置窗口](docs/preview/settings-window.png) |
+
+气泡、台词、三个形象的更多截图见 [`docs/preview/`](docs/preview/)。
+
+
+## 快速开始
 
 | 方式 | 怎么做 | 说明 |
 |---|---|---|
@@ -10,6 +59,8 @@
 | **④ 自己打包** | `npm install` → `npm run dist` | 产物在 `dist\` 下 |
 | **⑤ 开机自动启动** | 想开再开：`设置 → 开机自动启动` 勾上 | **默认关着**；勾上后登录就自己出来，随时可以取消 |
 
+**系统要求**：Windows 10 / 11（x64），无需安装 Node 或任何运行时。
+
 程序是**单实例**：已经开着的时候再启动不会开第二个，只会把现有那个唤出来。
 
 > **启动了却看不见桌宠？**「隐藏桌宠」是持久化开关，藏过之后下次启动也不显示。
@@ -17,26 +68,6 @@
 > 手工恢复：托盘图标右键 → 勾「显示桌宠」；或把 `%APPDATA%\notepad-pet-app\settings.json` 里 `petVisible` 改成 `true`。
 
 
-## 界面
-
-| 右键菜单（提醒 / 闹钟） | 设置窗口 |
-|---|---|
-| ![右键菜单](docs/preview/menu-0.5.14.png) | ![设置窗口](docs/preview/settings-window.png) |
-
-气泡、时段任务、闹钟倒计时的更多截图在 `docs/preview/`。
-
----
-
-一个常驻 Windows 桌面的小桌宠：**拖着走 + 吸附屏幕边缘 + 右键调设置 + 到点提醒你该干什么 + 提醒后每 1 分钟追着你确认**。
-纯 Electron 写的**独立桌面软件**，不装任何运行时；打包后就是一个双击即用的 exe。
-
-> **下载**：本仓库只放源码与文档，exe 放在 Releases 页（便携版单文件 / 安装版二选一）。
-> 想自己打包：`npm install` 后 `npm run dist`，产物在 `dist\`。
-> 打包版里**只有主代码**：不含测试、工具、文档（可用 `node tools/asar-list.mjs <app.asar>` 自己核对）。
-> **0.5.13 起：默认不开机自启、日程默认为空**；空日程会给你一句友好提示。自启开关在设置窗口和托盘菜单里各有一个，勾/取消立刻生效。
-> **0.5.14 起：右键菜单顶部的「提醒 / 闹钟」改成整行卡片**，标签不再被挤换行，排版有自动检查盯着。
-
----
 
 ## 一、这个文件夹里有什么
 
@@ -326,6 +357,17 @@ node tools\ascii.mjs alpha assets\pet.png                # 纯文本字符画看
 
 ---
 
+
+### 数据与隐私
+
+| 项目 | 情况 |
+|---|---|
+| 联网 | **完全不联网**：没有网络请求、没有统计上报、没有账号 |
+| 收集信息 | 不收集任何信息 |
+| 写入位置 | 只读写 `%APPDATA%\notepad-pet-app` 下的 4 个 json |
+| 开机自启 | 只在 `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` 写一个值，**默认不写** |
+| 后台动作 | 没有后台服务、没有计划任务、不装驱动 |
+
 ## 七、源码结构
 
 具体的目录树、每个目录放什么、每个命令干什么，统一写在**第十一节「项目结构」**，这里不重复。
@@ -427,6 +469,55 @@ npm run dist:dir       # 只出免安装文件夹（dist/win-unpacked，用完�
 4. **穿透状态与缓存不同步**：反复切换后 Windows 侧实际状态可能和主进程缓存值不一致，出现"鼠标明明在宠物上却点不动"。改为光标刚进入宠物后 1.2 秒内每轮重申一次 + 平时每约 1 秒强制重申（自愈）。
 
 > **一个使用提示**：菜单里的「始终置顶」如果被关掉，桌宠就不再压在其他窗口上面 —— 被别的窗口盖住的地方自然点不到（这是正常的，把开关打开即可）。
+
+## 常见问题
+
+<details><summary><b>双击了没反应 / 启动后看不见桌宠？</b></summary>
+
+- 便携版首次启动要自解包，**大约 5–10 秒**，等一下；
+- 「隐藏桌宠」是**持久化开关**，藏过之后下次启动也不会显示（0.5.10 起改为「只要启动就显示」并发一条通知）；
+- 手工恢复：托盘图标右键 → 勾「显示桌宠」，或把 `%APPDATA%\notepad-pet-app\settings.json` 里的 `petVisible` 改成 `true`。
+</details>
+
+<details><summary><b>桌宠会不会挡住我点桌面图标？</b></summary>
+
+不会。窗口是透明的，做了**鼠标穿透**：只有桌宠本体和右键菜单接收点击，其它区域的点击直接落到桌面或你的窗口。真碍事就拖到角落，或托盘里临时隐藏。
+</details>
+
+<details><summary><b>会不会偷偷开机自启？会动注册表吗？</b></summary>
+
+**默认不自启。** 设置窗口和托盘菜单里各有一个开关，勾上才写入 `HKCU\Software\Microsoft\Windows\CurrentVersion\Run` 一个值，取消就删掉。
+</details>
+
+<details><summary><b>日程默认是空的吗？</b></summary>
+
+是。0.5.13 起**日程默认为空**，此时点桌宠会给一句友好提示；想快速体验可以点设置里的「一键加回示例任务」。
+</details>
+
+<details><summary><b>我的数据存在哪？重装会丢吗？</b></summary>
+
+全部在 `%APPDATA%\notepad-pet-app\`（`settings.json` / `tasks.json` / `alarm.json` / `window.json`）。安装版默认**卸载不删数据**；任务文件还保留一代 `.bak`。
+</details>
+
+<details><summary><b>能换形象、换台词吗？</b></summary>
+
+**连点桌宠 10 下**切换形象（斯卡蒂 / 小特 / 缪缪）。台词池在 `renderer/pet.js` 的 `SPOKEN_LINES`，每句带权重，`{name}` 会替换成当前形象名。
+</details>
+
+<details><summary><b>为什么 exe 有 108 MB？</b></summary>
+
+Electron 会把 Chromium + Node 一并打包，体积就是这样。便携版是**单文件免安装**，安装版会建开始菜单项 —— 二选一即可。
+</details>
+
+<details><summary><b>杀毒软件报毒怎么办？</b></summary>
+
+exe **没有代码签名**（证书要花钱），部分杀软会对未签名的 Electron 程序误报。程序以**用户级权限**运行、不请求管理员；你可以直接读源码，或自己 `npm install && npm run dist` 打包一个。
+</details>
+
+<details><summary><b>支持 macOS / Linux 吗？</b></summary>
+
+目前只做 Windows —— 用到了 Windows 的通知、托盘和自启（注册表）这些平台特性。
+</details>
 
 ## 九、已知限制
 
@@ -552,9 +643,20 @@ npm run dist:dir       # 只出免安装文件夹（dist/win-unpacked，用完�
 
 ---
 
-## 免责声明与许可
+## 贡献与许可
 
-- 本项目为**个人学习交流**用途的桌面小工具，请勿用于商业用途。
-- 角色立绘与音效素材来源于网络，版权归原作者 / 发行方所有；如有侵权请联系删除。
-- 仓库内**不含**打包产物（exe 在 Releases 页），也**不含**任何私有代码或本地路径。
-- **未附开源许可证**：如需转载或基于本项目发布衍生作品，请先自行确认素材与代码的授权情况。
+### 参与贡献
+
+- 有 bug 或想法：开 Issue（写清版本号、Windows 版本、复现步骤）；
+- 想改代码：Fork → 改 → 跑验收 → 提 PR；
+- 提 PR 前请确认这两条是绿的：`npm run check`（语法）和 `npm test`（20 项综合验收 + 5 项闹钟跨重启）；
+- 改 `.ps1` 时**必须保留 UTF-8 BOM**（PowerShell 5.1 没 BOM 会读成乱码），细节见 [发布流程](docs/发布流程.md)。
+
+### 素材说明
+
+角色立绘与音效素材来源于网络，**版权归原作者 / 发行方所有**；本项目仅供个人学习交流使用，如有侵权请联系删除。
+
+### 许可
+
+本仓库**未附开源许可证**（`UNLICENSED`）：代码与素材都包含第三方内容，不适合直接套用 MIT/GPL。
+如需转载或发布衍生作品，请先自行确认素材与代码的授权情况。请勿用于商业用途。

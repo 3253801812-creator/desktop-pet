@@ -1,0 +1,51 @@
+name: Bug 反馈
+description: 桌宠行为不对、报错、卡死等
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        开 Issue 前请先看一眼[常见问题](https://github.com/3253801812-creator/desktop-pet#常见问题)，多半能直接找到答案。
+  - type: input
+    id: version
+    attributes:
+      label: 桌宠版本
+      description: Releases 或设置窗口里的版本号
+      placeholder: 0.5.14
+    validations:
+      required: true
+  - type: dropdown
+    id: edition
+    attributes:
+      label: 用的哪个版本
+      options:
+        - 便携版（单文件 exe）
+        - 安装版
+        - 从源码跑（npm start）
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Windows 版本
+      placeholder: Windows 11 23H2
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 写清「点了什么 → 期望什么 → 实际什么」
+      placeholder: |
+        1. 右键桌宠 → 提醒 / 闹钟
+        2. 设 5 分钟闹钟
+        3. 到点后……
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: 截图 / 错误信息（可选）
+    validations:
+      required: false

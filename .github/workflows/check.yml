@@ -1,0 +1,27 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    name: 语法与仓库规范检查
+    runs-on: windows-latest
+    env:
+      # 只做语法检查，不必真下载 Electron 二进制（省 100MB 和几分钟）
+      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: JS 语法检查
+        run: npm run check
+      - name: package.json 合法性
+        run: node -e "JSON.parse(require('fs').readFileSync('package.json','utf8'));console.log('package.json OK')"
+      # tests/ 里的完整验收要启动 Electron 图形界面并模拟鼠标，只能在有桌面的 Windows 上跑（npm test），CI 不跑。
