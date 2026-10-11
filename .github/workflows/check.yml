@@ -14,7 +14,7 @@ jobs:
       # 只做语法检查，不必真下载 Electron 二进制（省 100MB 和几分钟）
       ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 20
